@@ -1,0 +1,116 @@
+/* 色值 */
+:root {
+    // 这个是element主要按钮:active的颜色，当主题更改后此变量的值也随之更改
+    --el-color-primary: #1b58d2;
+    --el-color-primary-light-1: rgb(50, 126, 215);
+    --el-color-primary-light-2: rgb(73, 141, 219);
+    --el-color-primary-light-3: rgb(95, 155, 224);
+    --el-color-primary-light-4: rgb(118, 169, 228);
+    --el-color-primary-light-5: rgb(141, 184, 233);
+    --el-color-primary-light-6: rgb(164, 198, 237);
+    --el-color-primary-light-7: rgb(187, 212, 241);
+    --el-color-primary-light-8: rgb(209, 226, 246);
+    --el-color-primary-light-9: rgb(232, 241, 251);
+    --el-color-primary-dark-1: rgb(23, 117, 198);
+    --el-color-primary-dark-2: #1259ab;
+    --el-color-success: #67c23a;
+    --el-color-success-light-1: #76c84e;
+    --el-color-success-light-2: #85ce61;
+    --el-color-success-light-3: #95d475;
+    --el-color-success-light-4: #a4da89;
+    --el-color-success-light-5: #b3e19d;
+    --el-color-success-light-6: #c2e7b0;
+    --el-color-success-light-7: #d1edc4;
+    --el-color-success-light-8: #e1f3d8;
+    --el-color-success-light-9: #f0f9eb;
+    --el-color-success-dark-1: #529b2e;
+    --el-color-success-dark-2: #5daf34;
+    --el-color-warning: #e6a23c;
+    --el-color-warning-light-1: rgb(233, 172, 80);
+    --el-color-warning-light-2: rgb(235, 181, 100);
+    --el-color-warning-light-3: rgb(238, 190, 119);
+    --el-color-warning-light-4: rgb(240, 200, 138);
+    --el-color-warning-light-5: rgb(243, 209, 158);
+    --el-color-warning-light-6: rgb(245, 218, 177);
+    --el-color-warning-light-7: rgb(248, 227, 197);
+    --el-color-warning-light-8: #faecd8;
+    --el-color-warning-light-9: #fdf6ec;
+    --el-color-warning-dark-2: #b88230;
+
+    --el-color-danger: #e64f4f;
+    --el-color-danger-light-1: #f67b7b;
+    --el-color-danger-light-2: #f78989;
+    --el-color-danger-light-3: #f89898;
+    --el-color-danger-light-4: #f9a7a7;
+    --el-color-danger-light-5: #fab6b6;
+    --el-color-danger-light-6: #fbc4c4;
+    --el-color-danger-light-7: #fcd3d3;
+    --el-color-danger-light-8: #fde2e2;
+    --el-color-danger-light-9: #fef0f0;
+    --el-color-danger-dark-2: #c45656;
+    --el-color-error: #e64f4f;
+    --el-color-error-light-1: #f67b7b;
+    --el-color-error-light-2: #f78989;
+    --el-color-error-light-3: #f89898;
+    --el-color-error-light-4: #f9a7a7;
+    --el-color-error-light-5: #fab6b6;
+    --el-color-error-light-6: #fbc4c4;
+    --el-color-error-light-7: #fcd3d3;
+    --el-color-error-light-8: #fde2e2;
+    --el-color-error-light-9: #fef0f0;
+    --el-color-error-dark-2: #c45656;
+    --el-color-info: #909399;
+    --el-color-info-light-1: #9b9ea3;
+    --el-color-info-light-2: #a6a9ad;
+    --el-color-info-light-3: #b1b3b8;
+    --el-color-info-light-4: #bcbec2;
+    --el-color-info-light-5: #c8c9cc;
+    --el-color-info-light-6: #d3d4d6;
+    --el-color-info-light-7: #dedfe0;
+    --el-color-info-light-8: #e9e9eb;
+    --el-color-info-light-9: #f4f4f5;
+    --el-color-info-dark-2: #848d99;
+    --el-color-close-btn: #7e96c6;
+    --el-color-grey-1: #d0d6df;
+    --el-linear-blue: linear-gradient(90deg, #1b64d2 0%, #124aab 100%);
+    --el-linear-green: linear-gradient(97deg, #30a453 0%, #1fb25a 100%);
+    --el-linear-orange: linear-gradient(151deg, #ecbc7e 0%, #e6800c 100%);
+    --us-color-white: #ffffff;
+    --us-color-gray: #818181;
+    --us-color-blue: #409eff;
+    --us-color-green: #67c23a;
+    --us-color-orange: #e89224;
+    --us-color-red: #f56c6c;
+    --us-color-titlebg: #062d54;
+    --el-color-hover: #00dcff;
+    --el-color-hover2: #29facf;
+    --us-win-bg: rgba(0, 25, 93, 0.9);
+}
+
+/* 核心组件的变量，下面这些样式是必须要写的 */
+.el-link.el-link--primary:hover {
+    color: var(--el-color-hover-light-2) !important;
+}
+
+.el-tag {
+    --el-tag-bg-color: var(--el-color-primary-light-9);
+    --el-tag-border-color: var(--el-color-primary-light-8);
+    --el-tag-text-color: var(--el-color-primary);
+    --el-tag-hover-color: var(--el-color-primary);
+}
+
+// 你也可以降nProgress的颜色改成element主色调
+#nprogress {
+    & .bar {
+        background-color: var(--el-color-primary) !important;
+    }
+
+    & .peg {
+        box-shadow: 0 0 10px var(--el-color-primary), 0 0 5px var(--el-color-primary) !important;
+    }
+
+    & .spinner-icon {
+        border-top-color: var(--el-color-primary);
+        border-left-color: var(--el-color-primary);
+    }
+}

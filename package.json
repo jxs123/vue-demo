@@ -1,0 +1,50 @@
+{
+  "name": "vue-demo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vue-cli-service serve --mode develoption",
+    "build": "vue-cli-service build --mode production"
+  },
+  "dependencies": {
+    "animate.css": "^3.7.2",
+    "axios": "^0.21.1",
+    "echarts": "^5.4.0",
+    "element-ui": "^2.15.2",
+    "js-md5": "^0.7.3",
+    "nprogress": "^0.2.0",
+    "postcss-plugin-px2rem": "^0.8.1",
+    "postcss-px2rem": "^0.3.0",
+    "process": "^0.11.10",
+    "vue": "^2.6.14",
+    "vue-axios": "^3.2.4",
+    "vue-bus": "^1.2.1",
+    "vue-cookies": "^1.7.4",
+    "vue-router": "^3.5.4",
+    "vue-seamless-scroll": "^1.1.23",
+    "vue-text-format": "^1.2.6",
+    "vuex": "^3.6.2"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {},
+      "precss": {}
+    }
+  },
+  "devDependencies": {
+    "@supermap/babel-plugin-import": "0.0.1",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "px2rem-loader": "^0.1.9",
+    "sass": "^1.52.3",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
