@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-    name: "EcLine1", // 渐变柱状图
+    name: "EcLine2", // 折线
     props: ["ecLine"],
     data() {
         return {
@@ -12,11 +12,6 @@ export default {
             ecDom: "myChart",
             myChart: null
         };
-    },
-    computed: {
-        isTest() {
-            return this.config.role.isShow;
-        }
     },
     watch: {
         screenWidth: function () {
@@ -35,9 +30,10 @@ export default {
         }
     },
     // 页面渲染前，调用接口准备数据
-    created() {},
-    mounted() {
+    created() {
         this.ecDom = "myChart" + this.ecLine.id;
+    },
+    mounted() {
         let _that = this;
         let setTime;
 
@@ -54,20 +50,6 @@ export default {
         this.drawLine();
     },
     methods: {
-        downloadEc() {
-            const link = document.createElement("a");
-            link.download = "河道涉水事件";
-            link.style.display = "none";
-            link.href = this.myChart.getDataURL({
-                type: "png",
-                pixelRatio: 1.5,
-                backgroundColor: "#122539"
-            }); // 导出图表图片，返回一个 base64 的 URL
-            document.body.appendChild(link);
-            link.click();
-            URL.revokeObjectURL(link.href); //释放URL对象
-            document.body.removeChild(link);
-        },
         ecResize() {
             this.myChart.resize();
         },
@@ -75,131 +57,146 @@ export default {
             // 基于准备好的dom，初始化echarts实例
             var bar_dv = this.$refs.myChart;
             this.myChart = this.$echarts.init(bar_dv);
-            let { legend, yUnit, yName, xData, sName, sData, colorList, barWidth, labelColor, dataZoom, zoomSt, zoomEt } = this.ecLine;
+            let {
+                legend,
+                yName, // 名称
+                yUnit, // 单位
+                xData, // x轴数据
+                sData, // 数值
+                labelColor,
+                barWidth,
+                barGap,
+                dataZoom,
+                zoomSt,
+                zoomEt,
+                showLabel
+            } = this.ecLine;
 
-            if (dataZoom) {
-                barWidth = "30%";
-            }
-
-            let s2Data = [];
-            for (let i = 0; i < sData.length; i++) {
-                s2Data.push(1);
-            }
-
-            let colorline = new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: colorList[0] },
-                { offset: 1, color: colorList[1] }
-            ]);
-
-            // 绘制图表
-            let option = {
-                grid: {
-                    left: 12,
-                    right: 15,
-                    top: 30,
-                    bottom: 15,
-                    containLabel: true
-                },
-                legend: {
-                    show: legend,
-                    top: 0,
-                    right: 30,
-                    textStyle: {
-                        color: "#ffffff"
-                    }
-                },
-                tooltip: {
-                    show: true,
-                    trigger: "axis",
-                    formatter: function (params, ticket, callback) {
-                        let param = params[0];
-                        let tool = `${param.name}<br/>${param.marker}${param.seriesName}：${param.value}`;
-                        return tool;
-                    }
-                },
-                xAxis: {
-                    type: "category",
-                    axisLabel: {
-                        interval: 0,
-                        showMinLabel: true,
-                        showMaxLabel: true,
-                        color: labelColor,
-                        padding: 0,
-                        overflow: "break"
-                    },
-                    axisTick: {
-                        show: false
-                    },
-                    axisLine: {
-                        show: false
-                    },
-                    data: xData
-                },
-                yAxis: [
-                    {
-                        type: "value",
-                        name: yUnit,
-                        nameGap: 15,
-                        nameTextStyle: {
-                            color: labelColor
-                        },
-                        splitNumber: 5,
-                        axisLabel: {
-                            color: labelColor
-                        },
-                        splitLine: {
-                            show: true,
-                            lineStyle: {
-                                color: "rgba(154, 154, 154, 0.23)"
-                            }
-                        },
-                        scale: true
-                    },
-                    {
-                        type: "value",
-                        show: false
-                    }
-                ],
-                series: [
-                    {
-                        name: sName,
-                        data: sData,
+            let seriesArr = [];
+            if (sData && sData.length) {
+                sData.forEach((item) => {
+                    let colorline = new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: item.color[0] },
+                        { offset: 1, color: item.color[1] }
+                    ]);
+                    seriesArr.push({
+                        name: item.name,
+                        data: item.data,
                         type: "bar",
-                        smooth: true,
-                        showSymbol: false,
                         itemStyle: {
-                            borderRadius: [2, 2, 0, 0],
+                            borderRadius: 0,
                             color: colorline
                         },
                         barWidth: barWidth ? barWidth : "32%",
                         barMaxWidth: 20,
-                        emphasis: {
-                            lineStyle: {
-                                width: 1
-                            }
+                        barGap: barGap ? barGap : 0,
+                        label: {
+                            show: showLabel,
+                            position: "top",
+                            color: "#fff"
+                        }
+                    });
+                });
+            }
+
+            // 绘制图表
+            let option = {
+                grid: {
+                    left: 10,
+                    right: 10,
+                    top: 60,
+                    bottom: 30,
+                    containLabel: true
+                },
+                tooltip: {
+                    show: true,
+                    trigger: "axis",
+                    confine: true
+                },
+                legend: {
+                    show: legend,
+                    top: "8px",
+                    itemWidth: 12,
+                    itemHeight: 10,
+                    borderRadius: 2,
+                    textStyle: {
+                        color: labelColor
+                    }
+                },
+                xAxis: {
+                    type: "category",
+                    axisLine: {
+                        // 轴
+                        lineStyle: {
+                            color: "rgba(126, 126, 126, 0.5)"
+                        }
+                    },
+                    axisTick: {
+                        // 刻度
+                        show: false
+                    },
+                    axisLabel: {
+                        // 刻度
+                        color: labelColor,
+                        fontSize: 12
+                    },
+                    splitLine: {
+                        // 隔线
+                        show: false
+                    },
+                    data: xData
+                },
+                yAxis: {
+                    type: "value",
+                    name: yUnit,
+                    nameTextStyle: {
+                        color: labelColor
+                    },
+                    // splitNumber: 5,
+                    axisLine: {
+                        // 轴
+                        show: false
+                    },
+                    axisTick: {
+                        // 刻度
+                        show: false
+                    },
+                    axisLabel: {
+                        // 刻度
+                        color: labelColor,
+                        fontSize: 12
+                    },
+                    splitLine: {
+                        // 隔线
+                        show: true,
+                        lineStyle: {
+                            color: "#1e3567"
                         }
                     }
-                ]
+                },
+                series: seriesArr
             };
+
             if (dataZoom) {
-                option.grid.bottom = 25;
+                // option.grid.bottom = 25;
                 option.dataZoom = [
                     {
                         show: true,
-                        height: 10,
+                        height: 8,
                         xAxisIndex: [0],
                         brushSelect: false,
                         showDataShadow: false,
-                        bottom: 5,
+                        bottom: 15,
                         start: zoomSt,
                         end: zoomEt,
-                        handleIcon: "path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z",
-                        handleSize: "110%",
+                        handleSize: "0",
                         handleStyle: {
-                            color: "#d3dee5"
+                            color: "#253b86"
                         },
                         showDetail: false,
-                        borderColor: "#90979c"
+                        backgroundColor: "#1e315c",
+                        fillerColor: "#253b86",
+                        borderColor: "#15244F"
                     },
                     {
                         type: "inside",
@@ -210,11 +207,13 @@ export default {
                     }
                 ];
             }
-            this.myChart.setOption(option, true);
+
+            this.myChart.setOption(option);
 
             // this.myChart.off('click');
             // this.myChart.on('click', (params) => {
-            //     this.$parent.checkThis(params.dataIndex);
+            //     let idx2 = Math.abs(params.dataIndex - (checkData.length - 1));
+            //     this.$parent.checkThis(idx2);
             // });
         }
     }

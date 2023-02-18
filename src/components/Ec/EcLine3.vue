@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-    name: "EcLine2", // 折线
+    name: "EcLine1", // 折线
     props: ["ecLine"],
     data() {
         return {
@@ -58,46 +58,74 @@ export default {
             var bar_dv = this.$refs.myChart;
             this.myChart = this.$echarts.init(bar_dv);
             let {
+                legend,
                 yName, // 名称
                 yUnit, // 单位
                 xData, // x轴数据
                 sData, // 数值
-                boundaryGap, // 是否顶头
-                smooth, // 是否平滑
                 labelColor,
-                value2,
-                value3
+                barWidth,
+                barGap,
+                dataZoom,
+                zoomSt,
+                zoomEt,
+                showLabel
             } = this.ecLine;
 
-            if (boundaryGap == null) {
-                boundaryGap = true;
-            }
-            if (smooth == null) {
-                smooth = false;
+            let seriesArr = [];
+            if (sData && sData.length) {
+                sData.forEach((item) => {
+                    let colorline = new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: item.color[0] },
+                        { offset: 1, color: item.color[1] }
+                    ]);
+                    seriesArr.push({
+                        name: item.name,
+                        data: item.data,
+                        type: "bar",
+                        stack: item.stack,
+                        itemStyle: {
+                            borderRadius: 0,
+                            color: colorline
+                        },
+                        barWidth: barWidth ? barWidth : "32%",
+                        barMaxWidth: 20,
+                        barGap: barGap ? barGap : 0,
+                        label: {
+                            show: showLabel,
+                            position: "top",
+                            color: "#fff"
+                        }
+                    });
+                });
             }
 
             // 绘制图表
             let option = {
                 grid: {
                     left: 10,
-                    right: 14,
-                    top: 30,
-                    bottom: 0,
+                    right: 10,
+                    top: 60,
+                    bottom: 30,
                     containLabel: true
                 },
                 tooltip: {
                     show: true,
                     trigger: "axis",
-                    confine: true,
-                    formatter: function (params, ticket, callback) {
-                        let param = params[0];
-                        let tool = `${param.name}<br/>${param.marker}${param.seriesName}：${param.value} ${yUnit}`;
-                        return tool;
+                    confine: true
+                },
+                legend: {
+                    show: legend,
+                    top: "8px",
+                    itemWidth: 12,
+                    itemHeight: 10,
+                    borderRadius: 2,
+                    textStyle: {
+                        color: labelColor
                     }
                 },
                 xAxis: {
                     type: "category",
-                    boundaryGap: boundaryGap,
                     axisLine: {
                         // 轴
                         lineStyle: {
@@ -111,8 +139,7 @@ export default {
                     axisLabel: {
                         // 刻度
                         color: labelColor,
-                        fontSize: 12,
-                        formatter: "{value}号"
+                        fontSize: 12
                     },
                     splitLine: {
                         // 隔线
@@ -127,7 +154,6 @@ export default {
                         color: labelColor
                     },
                     // splitNumber: 5,
-                    boundaryGap: [0, "5%"],
                     axisLine: {
                         // 轴
                         show: false
@@ -145,45 +171,44 @@ export default {
                         // 隔线
                         show: true,
                         lineStyle: {
-                            color: "rgba(154, 154, 154, 0.23)"
+                            color: "#1e3567"
                         }
                     }
                 },
-                series: [
-                    {
-                        name: yName,
-                        data: sData,
-                        type: "bar",
-                        symbolSize: 1,
-                        smooth: smooth,
-                        itemStyle: {
-                            color: "#41BEFF"
-                        },
-                        barWidth: "32%",
-                        barMaxWidth: 20,
-                        emphasis: {
-                            lineStyle: {
-                                width: 2
-                            }
-                        },
-                        markLine: {
-                            symbol: "none",
-                            data: [
-                                {
-                                    name: "雨量超标线",
-                                    symbol: "none",
-                                    yAxis: value2,
-                                    label: { show: false },
-                                    lineStyle: { width: 1, color: "#B13E44", type: "solid" }
-                                }
-                            ],
-                            emphasis: {
-                                disabled: true
-                            }
-                        }
-                    }
-                ]
+                series: seriesArr
             };
+
+            if (dataZoom) {
+                // option.grid.bottom = 25;
+                option.dataZoom = [
+                    {
+                        show: true,
+                        height: 8,
+                        xAxisIndex: [0],
+                        brushSelect: false,
+                        showDataShadow: false,
+                        bottom: 15,
+                        start: zoomSt,
+                        end: zoomEt,
+                        handleSize: "0",
+                        handleStyle: {
+                            color: "#253b86"
+                        },
+                        showDetail: false,
+                        backgroundColor: "#1e315c",
+                        fillerColor: "#253b86",
+                        borderColor: "#15244F"
+                    },
+                    {
+                        type: "inside",
+                        show: true,
+                        height: 15,
+                        start: 1,
+                        end: 35
+                    }
+                ];
+            }
+
             this.myChart.setOption(option);
 
             // this.myChart.off('click');

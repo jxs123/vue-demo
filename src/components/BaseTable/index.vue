@@ -18,9 +18,8 @@
             :row-key="rowKey"
             :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
             @row-click="rowClick"
-            :show-summary="sumRowState"
-            :summary-method="getSummaries"
             v-loading="isLoading"
+            element-loading-background="rgba(0, 0, 0, 0.2)"
         >
             <!-- 复选框 -->
             <template v-if="selection">
@@ -38,7 +37,7 @@
                 :label="item.label"
                 :prop="item.prop"
                 :width="item.width ? item.width + '' : ''"
-                min-width="120"
+                min-width="60"
                 :align="item.align"
                 :fixed="item.fixed"
                 :sortable="item.sortable"
@@ -49,65 +48,10 @@
                     <template v-if="typeof item.modify === 'function'">
                         <span>
                             <template v-for="(v, index) in item.modify(scope.row, key)">
-                                <template v-if="v.typeof === 'button'">
-                                    <el-button
-                                        v-if="v.show ? showState(v.showState, scope.row[v.show]) : true"
-                                        size="mini"
-                                        :key="index"
-                                        :class="[{ 'm-l-xs': index != 0 }, v.typecolor ? 'btn-text-' + v.typecolor : 'btn-text-primary']"
-                                        :type="v.type ? v.type : 'primary'"
-                                        :disabled="scope.row | disabledState(v.disabled, v.disabledValue)"
-                                        :title="v.iconName"
-                                        @click.native.stop="
-                                            () => {
-                                                v.method(scope.$index, scope.row);
-                                            }
-                                        "
-                                    >
-                                        <i v-if="v.icon" :class="`iconfont ${v.iconclass}`"></i>{{ v.name }}
-                                    </el-button>
-                                </template>
-                                <!-- 编辑字段 -->
-                                <template v-else-if="v.typeof === 'edit'">
-                                    <span :key="'editname' + index">
-                                        {{ scope.row[item.prop] }}
-                                        <i
-                                            :class="`iconfont ${v.headerIcon} edit-icon`"
-                                            @click.native.stop="
-                                                () => {
-                                                    v.method(item.prop, scope.row);
-                                                }
-                                            "
-                                        ></i>
-                                    </span>
-                                </template>
-                                <template v-else-if="v.typeof === 'editLink'">
-                                    <span :key="'editname' + index">
-                                        <el-button
-                                            :class="{ 'm-l-xs': index != 0 }"
-                                            type="text"
-                                            size="mini"
-                                            @click.native.stop="
-                                                () => {
-                                                    v.method1(scope.$index, scope.row);
-                                                }
-                                            "
-                                            >{{ scope.row[item.prop] }}</el-button
-                                        >
-                                        <i
-                                            :class="`iconfont ${v.headerIcon} edit-icon`"
-                                            @click.native.stop="
-                                                () => {
-                                                    v.method2(item.prop, scope.row);
-                                                }
-                                            "
-                                        ></i>
-                                    </span>
-                                </template>
-                                <template v-else-if="v.typeof === 'link'">
+                                <template v-if="v.typeof === 'link'">
                                     <span :key="'link' + index">
                                         <el-button
-                                            :class="{ 'm-l-xs': index != 0 }"
+                                            :class="[{ 'm-l-xs': index != 0 }, 'btn-link', v.typecolor ? 'btn-text-' + v.typecolor : 'btn-text-primary']"
                                             type="text"
                                             size="mini"
                                             @click.native.stop="
@@ -117,21 +61,6 @@
                                             "
                                             >{{ scope.row[item.prop] }}</el-button
                                         >
-                                    </span>
-                                </template>
-                                <template v-else-if="v.typeof === 'editSwitch'">
-                                    <span :key="'switch' + index">
-                                        <el-switch
-                                            v-model="scope.row[item.prop]"
-                                            :active-value="'0'"
-                                            :inactive-value="'1'"
-                                            @change="
-                                                () => {
-                                                    v.method(scope.$index, scope.row);
-                                                }
-                                            "
-                                        >
-                                        </el-switch>
                                     </span>
                                 </template>
                             </template>
@@ -139,32 +68,33 @@
                     </template>
                     <!-- 格式化状态 -->
                     <template v-else-if="item.formart">
-                        <template v-if="item.formart === 'img'">
-                            <el-image style="width: 58px; height: 58px; vertical-align: top" :src="scope.row[item.prop]" fit="cover"></el-image>
+                        <template v-if="item.formart === 'numStateColor'">
+                            <span :class="'btn-text-' + getStateColor(scope.row[item.formartVal])">{{ indexMethod(scope.$index) }}</span>
                         </template>
                         <template v-if="item.formart === 'arr'">
                             <template v-for="(item2, idx2) in item.formartVal">
-                                <span :key="idx2">{{ scope.row[item2] !== null ? scope.row[item2] : "" }}</span>
+                                <span :key="idx2"
+                                    >{{ scope.row[item.formartVal[0]] !== null ? scope.row[item.formartVal[0]] : "/" }}({{
+                                        scope.row[item.formartVal[1]] !== null ? scope.row[item.formartVal[0]] : "/"
+                                    }})</span
+                                >
                             </template>
                         </template>
-                        <template v-if="item.formart === 'arrTime'">
-                            <template v-for="(item2, idx2) in item.formartVal">
-                                <span :key="idx2">{{ idx2 === 0 ? "" : "-" }}{{ scope.row[item2] !== null ? scope.row[item2] : "" }}</span>
-                            </template>
+                        <template v-if="item.formart === 'tooltip'">
+                            <span
+                                >{{ scope.row[item.prop] ? scope.row[item.prop] : "/" }}
+                                <el-tooltip class="item" effect="dark" :content="scope.row[item.formartVal]" placement="top-end">
+                                    <i class="iconfont icondianhua"></i>
+                                </el-tooltip>
+                            </span>
                         </template>
-                        <template v-if="item.formart === 'html'">
-                            <span v-html="scope.row[item.prop]"></span>
-                        </template>
-                        <template v-if="item.formart === 'valunit'">
-                            <span>{{ scope.row[item.prop] ? scope.row[item.prop] : "0" }}{{ item.formartVal }}</span>
-                        </template>
-                        <template v-if="item.formart === 'state'">
-                            <span :style="{ color: getStateColor(item.formartVal, scope.row[item.prop]) }">{{ scope.row[item.prop] ? scope.row[item.prop] : "-" }}</span>
+                        <template v-if="item.formart === 'stateColor'">
+                            <span :class="'btn-text-' + getStateColor(scope.row[item.formartVal])">{{ scope.row[item.prop] ? scope.row[item.prop] : "/" }}</span>
                         </template>
                     </template>
                     <!-- 正常的文本 -->
                     <template v-else>
-                        <span>{{ scope.row[item.prop] !== null ? scope.row[item.prop] : "-" }}</span>
+                        <span>{{ scope.row[item.prop] !== null ? scope.row[item.prop] : "/" }}</span>
                     </template>
                 </template>
             </el-table-column>
@@ -179,7 +109,7 @@
                 :page-sizes="pageSizes"
                 :page-size="pageSize"
                 :pager-count="5"
-                :layout="'total,' + (pageSizes.length > 1 ? ' sizes,' : '') + ' prev, pager, next, jumper'"
+                :layout="'total,prev,pager,next'"
                 :total="total"
             >
             </el-pagination>
@@ -340,34 +270,6 @@ export default {
                 }
             }
         },
-        // 返回合计行内容
-        getSummaries(param) {
-            const { columns, data } = param;
-            const sums = [];
-            if (this.sumRow) {
-                columns.forEach((column, index) => {
-                    if (index === 0) {
-                        sums[index] = "总计";
-                        return;
-                    } else if (column.type !== "default") {
-                        sums[index] = "/";
-                        return;
-                    }
-                    if (this.sumList.length > 0) {
-                        let label = this.sumList[0][column.property];
-                        if (label) {
-                            sums[index] = label;
-                        } else {
-                            sums[index] = "/";
-                        }
-                    } else {
-                        sums[index] = "/";
-                    }
-                });
-            }
-
-            return sums;
-        },
         // 点击行
         rowClick(row) {
             this.$emit("rowClick", row);
@@ -408,13 +310,23 @@ export default {
         },
         // 计算序号
         indexMethod(index) {
-            return 10 * (this.currentPage - 1) + index + 1;
+            return this.pageSize * (this.currentPage - 1) + index + 1;
         },
-        getStateColor(list, val) {
-            let colorStr = "#333333";
-            let obj = list.find((item) => item.label === val);
-            if (obj) {
-                colorStr = obj.color;
+        getStateColor(type) {
+            let colorStr = "white";
+            switch (type) {
+                case "1":
+                    colorStr = "green";
+                    break;
+                case "2":
+                    colorStr = "blue";
+                    break;
+                case "3":
+                    colorStr = "yellow";
+                    break;
+                case "4":
+                    colorStr = "grey";
+                    break;
             }
             return colorStr;
         },
@@ -428,6 +340,12 @@ export default {
                 }
             }
             return tf;
+        },
+        // 滚动到顶部
+        toScrollTop() {
+            this.$nextTick(() => {
+                this.$refs.baseTableRefs.bodyWrapper.scrollTop = 0;
+            });
         }
     },
     filters: {

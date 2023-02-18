@@ -16,7 +16,7 @@
 
 .el-table--scrollable-x .el-table__body-wrapper,
 .el-table--scrollable-y .el-table__body-wrapper {
-    @include scrollBar;
+    @include scrollTableBar;
 }
 
 .unit-input {
@@ -38,33 +38,10 @@
     }
 }
 
+.el-header,
 .el-main {
     padding: 0 !important;
     overflow: hidden !important;
-}
-.system-table {
-    padding: 0 20px;
-    background: #fff;
-    border-radius: 0;
-    .el-table th {
-        padding: 16px 0;
-        .cell {
-            font-weight: bold;
-            color: #282b37;
-        }
-    }
-    .el-table__body-wrapper {
-        .el-button {
-            padding: 4px 2px;
-            color: #333;
-            i.iconfont {
-                font-size: 18px;
-            }
-        }
-        .el-button:hover {
-            color: var(--el-color-primary);
-        }
-    }
 }
 
 /* 修改弹框 */

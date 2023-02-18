@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-    name: "EcLine2", // 折线
+    name: "EcLine1", // 折线
     props: ["ecLine"],
     data() {
         return {
@@ -58,17 +58,14 @@ export default {
             var bar_dv = this.$refs.myChart;
             this.myChart = this.$echarts.init(bar_dv);
             let {
+                legend,
                 yName, // 名称
                 yUnit, // 单位
                 xData, // x轴数据
                 sData, // 数值
                 boundaryGap, // 是否顶头
                 smooth, // 是否平滑
-                labelColor,
-                yName2,
-                value2,
-                yName3,
-                value3
+                labelColor
             } = this.ecLine;
 
             if (boundaryGap == null) {
@@ -78,23 +75,27 @@ export default {
                 smooth = false;
             }
 
-            let markData = [];
-            if (yName2) {
-                markData.push({
-                    name: yName2,
-                    symbol: "none",
-                    yAxis: value2,
-                    label: { show: false },
-                    lineStyle: { width: 1, color: "#B13E44", type: "solid" }
-                });
-            }
-            if (yName3) {
-                markData.push({
-                    name: yName3,
-                    symbol: "none",
-                    yAxis: value3,
-                    label: { show: false },
-                    lineStyle: { width: 1, color: "#B13E44" }
+            let seriesArr = [];
+            if (sData && sData.length) {
+                sData.forEach((item) => {
+                    seriesArr.push({
+                        name: item.name,
+                        data: item.data,
+                        type: "line",
+                        symbolSize: 6,
+                        smooth: smooth,
+                        itemStyle: {
+                            color: item.color
+                        },
+                        lineStyle: {
+                            width: 2
+                        },
+                        emphasis: {
+                            lineStyle: {
+                                width: 2
+                            }
+                        }
+                    });
                 });
             }
 
@@ -102,19 +103,21 @@ export default {
             let option = {
                 grid: {
                     left: 10,
-                    right: 14,
-                    top: 30,
-                    bottom: 0,
+                    right: 10,
+                    top: 40,
+                    bottom: 20,
                     containLabel: true
                 },
                 tooltip: {
                     show: true,
                     trigger: "axis",
-                    confine: true,
-                    formatter: function (params, ticket, callback) {
-                        let param = params[0];
-                        let tool = `${param.name}<br/>${param.marker}${param.seriesName}：${param.value} ${yUnit}`;
-                        return tool;
+                    confine: true
+                },
+                legend: {
+                    show: legend,
+                    top: "8px",
+                    textStyle: {
+                        color: labelColor
                     }
                 },
                 xAxis: {
@@ -133,8 +136,7 @@ export default {
                     axisLabel: {
                         // 刻度
                         color: labelColor,
-                        fontSize: 12,
-                        formatter: "{value}号"
+                        fontSize: 12
                     },
                     splitLine: {
                         // 隔线
@@ -167,37 +169,11 @@ export default {
                         // 隔线
                         show: true,
                         lineStyle: {
-                            color: "rgba(154, 154, 154, 0.23)"
+                            color: "#1e3567"
                         }
                     }
                 },
-                series: [
-                    {
-                        name: yName,
-                        data: sData,
-                        type: "line",
-                        symbolSize: 1,
-                        smooth: smooth,
-                        itemStyle: {
-                            color: "#00DCFF"
-                        },
-                        lineStyle: {
-                            width: 2
-                        },
-                        emphasis: {
-                            lineStyle: {
-                                width: 2
-                            }
-                        },
-                        markLine: {
-                            symbol: "none",
-                            data: markData,
-                            emphasis: {
-                                disabled: true
-                            }
-                        }
-                    }
-                ]
+                series: seriesArr
             };
             this.myChart.setOption(option);
 

@@ -28,3 +28,25 @@
         -o-border-radius: 3px;
     }
 }
+@mixin scrollTableBar {
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    &::-webkit-scrollbar-button {
+        height: 0;
+        width: 0;
+    }
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-track-piece {
+        background: var(--table-head-bg-color);
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--el-color-primary);
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        -ms-border-radius: 3px;
+        -o-border-radius: 3px;
+    }
+}

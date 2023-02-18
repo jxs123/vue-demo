@@ -1,7 +1,7 @@
 /* 色值 */
 :root {
     // 这个是element主要按钮:active的颜色，当主题更改后此变量的值也随之更改
-    --el-color-primary: #1b58d2;
+    --el-color-primary: #253b86;
     --el-color-primary-light-1: rgb(50, 126, 215);
     --el-color-primary-light-2: rgb(73, 141, 219);
     --el-color-primary-light-3: rgb(95, 155, 224);
@@ -13,6 +13,10 @@
     --el-color-primary-light-9: rgb(232, 241, 251);
     --el-color-primary-dark-1: rgb(23, 117, 198);
     --el-color-primary-dark-2: #1259ab;
+    --table-head-bg-color: #1e315c;
+    --table-border-color: #1e3567;
+    --table-icon-color: #125a89;
+
     --el-color-success: #67c23a;
     --el-color-success-light-1: #76c84e;
     --el-color-success-light-2: #85ce61;
@@ -76,14 +80,11 @@
     --el-linear-green: linear-gradient(97deg, #30a453 0%, #1fb25a 100%);
     --el-linear-orange: linear-gradient(151deg, #ecbc7e 0%, #e6800c 100%);
     --us-color-white: #ffffff;
-    --us-color-gray: #818181;
-    --us-color-blue: #409eff;
-    --us-color-green: #67c23a;
-    --us-color-orange: #e89224;
-    --us-color-red: #f56c6c;
-    --us-color-titlebg: #062d54;
-    --el-color-hover: #00dcff;
-    --el-color-hover2: #29facf;
+    --status-color-green: #008b00;
+    --status-color-blue: #4c919e;
+    --status-color-yellow: #fefa04;
+    --status-color-gray: #807f7b;
+    --ec-boder-color: #58bde4;
     --us-win-bg: rgba(0, 25, 93, 0.9);
 }
 
