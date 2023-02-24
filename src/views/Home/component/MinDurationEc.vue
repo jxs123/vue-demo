@@ -3,11 +3,11 @@
  * @Author: jinxiaoshan
  * @Date: 2023-02-18 07:11:54
  * @LastEditors: jinxiaoshan
- * @LastEditTime: 2023-02-18 12:56:57
+ * @LastEditTime: 2023-02-18 14:45:37
 -->
 <template>
     <div class="flex-column home-ec">
-        <ec-title :title="'轮轴工区交检时长统计'"></ec-title>
+        <ec-title :title="'每日最短响应时长/min'"></ec-title>
         <div class="flex-1">
             <EcLine2 :ecLine="ecLine"></EcLine2>
         </div>
